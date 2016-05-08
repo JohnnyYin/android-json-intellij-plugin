@@ -1,0 +1,39 @@
+<idea-plugin version="7">
+    <id>com.johnnyyin.jsonplugin</id>
+    <name>Json Plugin</name>
+    <version>1.0</version>
+    <vendor email="enjoy930429@gmail.com" url="http://www.johnnyyin.com">JohnnyYin</vendor>
+
+    <description><![CDATA[
+      为Model自动生成Json字符串的序列化和反序列化方法.
+    ]]></description>
+
+    <change-notes><![CDATA[
+      1.toJson: 支持将Model转换为Android JSONObject
+      2.fromJson: 支持将字符串转换为Model
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="123.72"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="generateJsonNew" class="com.johnnyyin.jsonplugin.JsonAction" text="toJson() and fromJson()">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+    </actions>
+
+    <application-components>
+    </application-components>
+</idea-plugin>
