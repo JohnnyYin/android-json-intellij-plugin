@@ -1,6 +1,6 @@
 <idea-plugin version="7">
     <id>com.johnnyyin.jsonplugin</id>
-    <name>Json Plugin</name>
+    <name>Android Json code generator</name>
     <version>1.0</version>
     <vendor email="enjoy930429@gmail.com" url="http://www.johnnyyin.com">JohnnyYin</vendor>
 
@@ -9,8 +9,8 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      1.toJson: 支持将Model转换为Android JSONObject
-      2.fromJson: 支持将字符串转换为Model
+      1.toJson: 支持将Model转换为Android JSONObject;</br>
+      2.fromJson: 支持将字符串转换为Model.
     ]]>
     </change-notes>
 

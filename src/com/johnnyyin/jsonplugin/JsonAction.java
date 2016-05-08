@@ -39,11 +39,11 @@ public class JsonAction extends AnAction {
         dlg.show();
 
         if (dlg.isOK()) {
-            generateParcelable(psiClass, dlg.getSelectedFields());
+            generateJson(psiClass, dlg.getSelectedFields());
         }
     }
 
-    private void generateParcelable(final PsiClass psiClass, final List<PsiField> fields) {
+    private void generateJson(final PsiClass psiClass, final List<PsiField> fields) {
         new WriteCommandAction.Simple(psiClass.getProject(), psiClass.getContainingFile()) {
             @Override
             protected void run() throws Throwable {
@@ -69,7 +69,6 @@ public class JsonAction extends AnAction {
 
         int offset = editor.getCaretModel().getOffset();
         PsiElement element = psiFile.findElementAt(offset);
-        
         return PsiTreeUtil.getParentOfType(element, PsiClass.class);
     }
 }
