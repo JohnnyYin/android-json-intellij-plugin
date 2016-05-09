@@ -15,8 +15,10 @@
  */
 package com.johnnyyin.jsonplugin;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.johnnyyin.jsonplugin.typeserializers.*;
 
 import java.util.List;
@@ -89,7 +91,8 @@ public class CodeGenerator {
     }
 
     public void generate() {
-        PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(mClass.getProject());
+        Project project = mClass.getProject();
+        PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(project);
 
         removeExistingParcelableImplementation(mClass);
 
@@ -97,11 +100,21 @@ public class CodeGenerator {
         PsiMethod toJsonMethod = elementFactory.createMethodFromText(generateToJson(mFields), mClass);
         PsiMethod fromJsonMethod = elementFactory.createMethodFromText(generateFromJson(mFields), mClass);
 
-        JavaCodeStyleManager styleManager = JavaCodeStyleManager.getInstance(mClass.getProject());
+        JavaCodeStyleManager styleManager = JavaCodeStyleManager.getInstance(project);
 
         // Shorten all class references
         styleManager.shortenClassReferences(mClass.addBefore(toJsonMethod, mClass.getLastChild()));
         styleManager.shortenClassReferences(mClass.addBefore(fromJsonMethod, mClass.getLastChild()));
+
+        // import
+        PsiJavaFile psiJavaFile = (PsiJavaFile) mClass.getContainingFile();
+        JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(project);
+        PsiClass clsJSONObject = javaPsiFacade.findClass("org.json.JSONObject", GlobalSearchScope.allScope(project));
+        PsiClass clsJSONException = javaPsiFacade.findClass("org.json.JSONException", GlobalSearchScope.allScope(project));
+        if (clsJSONObject != null)
+            styleManager.addImport(psiJavaFile, clsJSONObject);
+        if (clsJSONException != null)
+            styleManager.addImport(psiJavaFile, clsJSONException);
     }
 
     /**

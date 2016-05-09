@@ -16,11 +16,7 @@
 package com.johnnyyin.jsonplugin.typeserializers;
 
 import com.intellij.psi.PsiType;
-import com.johnnyyin.jsonplugin.typeserializers.serializers.BooleanPrimitiveSerializer;
-import com.johnnyyin.jsonplugin.typeserializers.serializers.CharPrimitiveSerializer;
-import com.johnnyyin.jsonplugin.typeserializers.serializers.NullablePrimitivesSerializer;
-import com.johnnyyin.jsonplugin.typeserializers.serializers.PrimitiveTypeSerializer;
-import com.johnnyyin.jsonplugin.typeserializers.serializers.ShortPrimitiveSerializer;
+import com.johnnyyin.jsonplugin.typeserializers.serializers.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,10 +27,10 @@ public class PrimitiveTypeSerializerFactory implements TypeSerializerFactory {
 
     public PrimitiveTypeSerializerFactory() {
         initPrimitives();
-        initNullablePrimitives();
+//        initNullablePrimitives();
     }
 
-    private void initNullablePrimitives() {
+    /*private void initNullablePrimitives() {
         writeMethodsForTypes.put("java.lang.Byte", new NullablePrimitivesSerializer("java.lang.Byte"));
         writeMethodsForTypes.put("java.lang.Double", new NullablePrimitivesSerializer("java.lang.Double"));
         writeMethodsForTypes.put("java.lang.Float", new NullablePrimitivesSerializer("java.lang.Float"));
@@ -43,18 +39,28 @@ public class PrimitiveTypeSerializerFactory implements TypeSerializerFactory {
         writeMethodsForTypes.put("java.lang.Long", new NullablePrimitivesSerializer("java.lang.Long"));
         writeMethodsForTypes.put("java.lang.Boolean", new NullablePrimitivesSerializer("java.lang.Boolean"));
         writeMethodsForTypes.put("java.lang.Char", new NullablePrimitivesSerializer("java.lang.Char"));
-    }
+    }*/
 
     private void initPrimitives() {
-        writeMethodsForTypes.put("byte", new PrimitiveTypeSerializer("Byte"));
+        writeMethodsForTypes.put("byte", new BytePrimitiveSerializer());
         writeMethodsForTypes.put("double", new PrimitiveTypeSerializer("Double"));
-        writeMethodsForTypes.put("float", new PrimitiveTypeSerializer("Float"));
+        writeMethodsForTypes.put("float", new FloatPrimitiveSerializer());
         writeMethodsForTypes.put("short", new ShortPrimitiveSerializer());
         writeMethodsForTypes.put("int", new PrimitiveTypeSerializer("Int"));
         writeMethodsForTypes.put("long", new PrimitiveTypeSerializer("Long"));
-        writeMethodsForTypes.put("java.lang.String", new PrimitiveTypeSerializer("String"));
-        writeMethodsForTypes.put("boolean", new BooleanPrimitiveSerializer());
+        writeMethodsForTypes.put("boolean", new PrimitiveTypeSerializer("Boolean"));
         writeMethodsForTypes.put("char", new CharPrimitiveSerializer());
+
+        writeMethodsForTypes.put("java.lang.Byte", new BytePrimitiveSerializer());
+        writeMethodsForTypes.put("java.lang.Double", new PrimitiveTypeSerializer("Double"));
+        writeMethodsForTypes.put("java.lang.Float", new FloatPrimitiveSerializer());
+        writeMethodsForTypes.put("java.lang.Short", new ShortPrimitiveSerializer());
+        writeMethodsForTypes.put("java.lang.Integer", new PrimitiveTypeSerializer("Int"));
+        writeMethodsForTypes.put("java.lang.Long", new PrimitiveTypeSerializer("Long"));
+        writeMethodsForTypes.put("java.lang.Boolean", new PrimitiveTypeSerializer("Boolean"));
+        writeMethodsForTypes.put("java.lang.Char", new CharPrimitiveSerializer());
+
+        writeMethodsForTypes.put("java.lang.String", new PrimitiveTypeSerializer("String"));
     }
 
     @Override

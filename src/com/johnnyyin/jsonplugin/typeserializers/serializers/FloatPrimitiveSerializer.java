@@ -18,7 +18,7 @@ package com.johnnyyin.jsonplugin.typeserializers.serializers;
 import com.intellij.psi.PsiField;
 import com.johnnyyin.jsonplugin.typeserializers.TypeSerializer;
 
-public class BooleanPrimitiveSerializer implements TypeSerializer {
+public class FloatPrimitiveSerializer implements TypeSerializer {
 
     @Override
     public String writeValue(PsiField field, String parcel, String flags) {
@@ -28,6 +28,6 @@ public class BooleanPrimitiveSerializer implements TypeSerializer {
     @Override
     public String readValue(PsiField field, String parcel) {
         final String fieldName = field.getName();
-        return fieldName + " = " + parcel + ".optBoolean(\"" + fieldName + "\");";
+        return fieldName + " = (float) " + parcel + ".optDouble(\"" + fieldName + "\");";
     }
 }

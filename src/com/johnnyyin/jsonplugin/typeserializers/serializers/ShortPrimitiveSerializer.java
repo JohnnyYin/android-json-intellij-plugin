@@ -14,6 +14,6 @@ public class ShortPrimitiveSerializer implements TypeSerializer {
     @Override
     public String readValue(PsiField field, String parcel) {
         final String fieldName = field.getName();
-        return fieldName + " = " + parcel + ".optInt(\"" + fieldName + "\");";
+        return fieldName + " = (short) " + parcel + ".optInt(\"" + fieldName + "\");";
     }
 }
