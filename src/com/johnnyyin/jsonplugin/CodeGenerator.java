@@ -67,13 +67,16 @@ public class CodeGenerator {
         return sb.toString();
     }
 
-    private String generateFromJson(List<PsiField> fields) {
+    private String generateParseJson(List<PsiField> fields) {
         StringBuilder sb = new StringBuilder();
         String clsName = mClass.getName();
         if (clsName == null || clsName.length() < 1) {
             return "";
         }
-        sb.append("public void fromJson(String jsonStr) {\n");
+        sb.append("public void parseJson(String jsonStr) {\n");
+        sb.append("     if (TextUtils.isEmpty(jsonStr)) {\n");
+        sb.append("          return;\n");
+        sb.append("     }\n");
         sb.append("     try {\n");
         sb.append("         JSONObject json = new JSONObject(jsonStr);\n");
         for (PsiField field : fields) {
@@ -82,6 +85,34 @@ public class CodeGenerator {
         sb.append("     } catch (JSONException e) {\n");
         sb.append("         e.printStackTrace();\n");
         sb.append("     }\n");
+        sb.append("}\n");
+        return sb.toString();
+    }
+
+    /**
+     * 生成静态的formJson方法
+     */
+    private String generateStaticFromJson(List<PsiField> fields) {
+        StringBuilder sb = new StringBuilder();
+        String clsName = mClass.getName();
+        if (clsName == null || clsName.length() < 1) {
+            return "";
+        }
+        sb.append("public static " + clsName + " fromJson(String jsonStr) {\n");
+        sb.append("     if (TextUtils.isEmpty(jsonStr)) {\n");
+        sb.append("          return null;\n");
+        sb.append("     }\n");
+        sb.append("     " + clsName + " m = new " + clsName + "();\n");
+        sb.append("     try {\n");
+        sb.append("         JSONObject json = new JSONObject(jsonStr);\n");
+        for (PsiField field : fields) {
+            sb.append("m." + getSerializerForType(field).readValue(field, "json"));
+        }
+        sb.append("     } catch (JSONException e) {\n");
+        sb.append("         e.printStackTrace();\n");
+        sb.append("         m = null;\n");
+        sb.append("     }\n");
+        sb.append("     return m;\n");
         sb.append("}\n");
         return sb.toString();
     }
@@ -98,19 +129,24 @@ public class CodeGenerator {
 
         // Method for writing to the parcel
         PsiMethod toJsonMethod = elementFactory.createMethodFromText(generateToJson(mFields), mClass);
-        PsiMethod fromJsonMethod = elementFactory.createMethodFromText(generateFromJson(mFields), mClass);
+        PsiMethod parseJsonMethod = elementFactory.createMethodFromText(generateParseJson(mFields), mClass);
+        PsiMethod staticFromJsonMethod = elementFactory.createMethodFromText(generateStaticFromJson(mFields), mClass);
 
         JavaCodeStyleManager styleManager = JavaCodeStyleManager.getInstance(project);
 
         // Shorten all class references
         styleManager.shortenClassReferences(mClass.addBefore(toJsonMethod, mClass.getLastChild()));
-        styleManager.shortenClassReferences(mClass.addBefore(fromJsonMethod, mClass.getLastChild()));
+        styleManager.shortenClassReferences(mClass.addBefore(parseJsonMethod, mClass.getLastChild()));
+        styleManager.shortenClassReferences(mClass.addBefore(staticFromJsonMethod, mClass.getLastChild()));
 
         // import
         PsiJavaFile psiJavaFile = (PsiJavaFile) mClass.getContainingFile();
         JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(project);
+        PsiClass clsTextUtils = javaPsiFacade.findClass("android.text.TextUtils", GlobalSearchScope.allScope(project));
         PsiClass clsJSONObject = javaPsiFacade.findClass("org.json.JSONObject", GlobalSearchScope.allScope(project));
         PsiClass clsJSONException = javaPsiFacade.findClass("org.json.JSONException", GlobalSearchScope.allScope(project));
+        if (clsTextUtils != null)
+            styleManager.addImport(psiJavaFile, clsTextUtils);
         if (clsJSONObject != null)
             styleManager.addImport(psiJavaFile, clsJSONObject);
         if (clsJSONException != null)

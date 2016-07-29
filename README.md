@@ -1,7 +1,7 @@
 # android-json-intellij-plugin
 
 
-```
+```java
 public class Account {
     public String uid;
     public String username;
@@ -12,7 +12,7 @@ public class Account {
 ```
 使用后，自动生成toJson和fromJson方法
 
-```
+```java
 import org.json.JSONException;
 import org.json.JSONObject;
 
